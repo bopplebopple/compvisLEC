@@ -1,11 +1,10 @@
 import cv2
-import face_recognition
-import cv2
+import numpy as np
 import os
 import glob
-import numpy as np
+import face_recognition
 
-class SimpleFacerec:
+class faceRecognition:
     def __init__(self):
         self.known_face_encodings = []
         self.known_face_names = []
@@ -25,7 +24,6 @@ class SimpleFacerec:
 
             self.known_face_encodings.append(img_encoding)
             self.known_face_names.append(filename)
-        print("Encoding images loaded")
 
     def detect_known_faces(self, frame):
         small_frame = cv2.resize(frame, (0, 0), fx=self.frame_resizing, fy=self.frame_resizing)
@@ -48,15 +46,15 @@ class SimpleFacerec:
         face_locations = face_locations / self.frame_resizing
         return face_locations.astype(int), face_names
 
-cap = cv2.VideoCapture(0)
+video = cv2.VideoCapture(0)
 
-sfr = SimpleFacerec()
-sfr.load_encoding_images("images/")
+faceRec = faceRecognition()
+faceRec.load_encoding_images("images/")
 
 while True:
-    ret, frame = cap.read()
+    ret, frame = video.read()
 
-    face_locations, face_names = sfr.detect_known_faces(frame)
+    face_locations, face_names = faceRec.detect_known_faces(frame)
     for face_loc, name in zip(face_locations, face_names):
         y1, x2, y2, x1 = face_loc[0], face_loc[1], face_loc[2], face_loc[3]
         
@@ -69,5 +67,5 @@ while True:
     if key == 27:
         break
 
-cap.release()
+video.release()
 cv2.destroyAllWindows()
