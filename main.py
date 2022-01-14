@@ -12,21 +12,15 @@ class SimpleFacerec:
         self.frame_resizing = 0.25
 
     def load_encoding_images(self, images_path):
-        """
-        Load encoding images from path
-        :param images_path:
-        :return:
-        """
         images_path = glob.glob(os.path.join(images_path, "*.*"))
-
-        print("{} encoding images found.".format(len(images_path)))
+        print("We detected {} dataset images..".format(len(images_path)))
 
         for img_path in images_path:
             img = cv2.imread(img_path)
             rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             basename = os.path.basename(img_path)
-            (filename, ext) = os.path.splitext(basename)
+            (filename) = os.path.splitext(basename)
             img_encoding = face_recognition.face_encodings(rgb_img)[0]
 
             self.known_face_encodings.append(img_encoding)
@@ -54,8 +48,6 @@ class SimpleFacerec:
         face_locations = face_locations / self.frame_resizing
         return face_locations.astype(int), face_names
 
-
-
 cap = cv2.VideoCapture(0)
 
 sfr = SimpleFacerec()
@@ -73,7 +65,6 @@ while True:
 
     cv2.imshow("Frame", frame)
 
-#Use 'esc' to close window
     key = cv2.waitKey(1)
     if key == 27:
         break
