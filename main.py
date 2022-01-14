@@ -19,7 +19,7 @@ class faceRecognition:
             rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             basename = os.path.basename(img_path)
-            (filename) = os.path.splitext(basename)
+            (filename, ext) = os.path.splitext(basename)
             img_encoding = face_recognition.face_encodings(rgb_img)[0]
 
             self.known_face_encodings.append(img_encoding)
@@ -33,7 +33,7 @@ class faceRecognition:
 
         face_names = []
         for face_encoding in face_encodings:
-            matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
+            matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding, tolerance=0.4)
             name = "Face Not Found"
 
             face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
